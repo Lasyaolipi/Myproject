@@ -19,7 +19,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.TF_OIDC_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: ap-south-1
 
       - name: Terraform Init and Plan
         run: |

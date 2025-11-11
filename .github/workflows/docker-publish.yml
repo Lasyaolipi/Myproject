@@ -16,11 +16,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.TF_OIDC_ROLE_ARN }}
-          aws-region: us-east-1
+          aws-region: ap-south-1
 
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -31,4 +31,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/mywebapp:latest
+          tags: 391313099163.dkr.ecr.ap-south-1.amazonaws.com/mywebapp:latest

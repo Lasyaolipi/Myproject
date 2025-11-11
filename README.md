@@ -1,19 +1,26 @@
-# Terraform Infrastructure Boilerplate (Single AWS Account)
+# Terraform Infrastructure (Single AWS Account)
+Account: 391313099163
+Region: ap-south-1
 
-This repo contains a complete Terraform implementation (modules + envs) for a single-account AWS architecture:
-- VPC, CloudTrail, S3 backend bootstrap
-- ECR repositories
-- EKS cluster (using terraform-aws-modules/eks/aws)
-- IAM role for GitHub Actions OIDC
-- GuardDuty and Security Hub modules
-- Example envs: `bootstrap` and `prod`
+This repo contains a modular Terraform infrastructure setup for a single-account AWS architecture.
+Run bootstrap first to create backend resources, then deploy the prod environment.
 
-**Important**: Update unique names (buckets, account IDs) in `envs/*/terraform.tfvars` before applying.
+## Quick start
+1. Bootstrap backend (creates S3 bucket + DynamoDB table):
+   ```bash
+   cd envs/bootstrap
+   terraform init
+   terraform apply
+   ```
 
-Folders:
-- modules/
-- envs/bootstrap
-- envs/prod
+2. Deploy production stack:
+   ```bash
+   cd ../prod
+   terraform init
+   terraform plan -out plan.tfplan
+   terraform apply plan.tfplan
+   ```
 
-Run bootstrap first: `cd infra/envs/bootstrap && terraform init && terraform apply`
-Then configure backend and run prod: `cd infra/envs/prod && terraform init && terraform plan && terraform apply`
+## Notes
+- Update secrets and GitHub workflow repository/secret names as needed.
+- The GitHub Actions workflows are configured to use an OIDC-assumable IAM role that Terraform will create (output `module.iam.role_arn`).

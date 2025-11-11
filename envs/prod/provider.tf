@@ -2,14 +2,14 @@ terraform {
   required_version = ">= 1.3"
 
   backend "s3" {
-    bucket         = "my-org-terraform-state-unique-12345"
+    bucket         = "terraform-backend-391313099163"
     key            = "prod/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "my-org-tf-locks-unique-12345"
+    region         = "ap-south-1"
+    dynamodb_table = "terraform-locks"
     encrypt        = true
   }
 }
 
 provider "aws" {
-  region = var.region
+  region = "ap-south-1"
 }

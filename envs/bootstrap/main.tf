@@ -1,12 +1,12 @@
 module "s3_backend" {
   source = "../../modules/s3-backend"
-  state_bucket = var.state_bucket
-  log_bucket = var.log_bucket
-  region = var.region
+  state_bucket = "terraform-backend-391313099163"
+  log_bucket = "org-log-bucket-391313099163"
+  region = "ap-south-1"
 }
 
 resource "aws_dynamodb_table" "locks" {
-  name         = var.dynamodb_table
+  name         = "terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
   attribute {
