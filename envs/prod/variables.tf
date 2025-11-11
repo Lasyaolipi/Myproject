@@ -3,13 +3,32 @@ variable "region" {
   default = "ap-south-1"
 }
 
-variable "aws_account_id" {
+variable "vpc_cidr" {
+  type = string
+}
+
+variable "public_subnets" {
+  type = list(string)
+}
+
+variable "private_subnets" {
+  type = list(string)
+}
+
+variable "github_org" {
+  type = string
+}
+
+variable "repo" {
+  type = string
+}
+
+variable "role_name" {
   type    = string
-  default = "391313099163"
+  default = "github-actions-role"
 }
 
 variable "cluster_name" {
   type    = string
   default = "prod-eks"
 }
-

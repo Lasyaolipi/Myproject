@@ -13,37 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 🧩 Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 🧩 Step 2: Configure AWS credentials via OIDC
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.TF_OIDC_ROLE_ARN }}
           aws-region: ap-south-1
 
-      # 🧩 Step 3: Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.8
 
-      # 🧩 Step 4: Terraform Init (force module upgrade)
-      - name: Terraform Init
-        run: terraform -chdir=envs/prod init -input=false -upgrade
+      - name: Terraform Init (with upgrade)
+        run: terraform -chdir=envs/prod init -upgrade -input=false
 
-      # 🧩 Step 5: Terraform Validate
       - name: Terraform Validate
         run: terraform -chdir=envs/prod validate
 
-      # 🧩 Step 6: Terraform Plan
       - name: Terraform Plan
         run: terraform -chdir=envs/prod plan -out plan.tfplan
 
-      # 🧩 Step 7: Terraform Apply (optional)
-      # Only run apply when pushing to master
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform -chdir=envs/prod apply -auto-approve plan.tfplan
