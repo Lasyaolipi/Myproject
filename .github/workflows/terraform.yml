@@ -1,0 +1,28 @@
+name: Terraform CI
+
+on:
+  push:
+    branches: [ master ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.TF_OIDC_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Terraform Init and Plan
+        run: |
+          cd envs/prod
+          terraform init -input=false
+          terraform plan -out plan.tfplan

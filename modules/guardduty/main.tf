@@ -1,0 +1,4 @@
+resource "aws_guardduty_detector" "this" {
+  enable = true
+}
+output "guardduty_id" { value = aws_guardduty_detector.this.id }
