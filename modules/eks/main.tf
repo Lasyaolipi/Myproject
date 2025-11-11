@@ -11,18 +11,17 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.0.0"
 
-  cluster_name    = var.cluster_name
-  cluster_version = "1.26"
+  cluster_name = var.cluster_name
+  vpc_id       = var.vpc_id
+  private_subnets = var.private_subnet_ids
+  public_subnets  = var.public_subnet_ids
 
-  vpc_id = var.vpc_id
-  subnets = concat(var.private_subnet_ids, var.public_subnet_ids)
-
-  node_groups = {
+  eks_managed_node_groups = {
     default = {
-      desired_capacity = 2
-      min_capacity     = 1
-      max_capacity     = 3
-      instance_types   = ["t3.medium"]
+      desired_size = 2
+      max_size     = 3
+      min_size     = 1
+      instance_types = ["t3.medium"]
     }
   }
 }
