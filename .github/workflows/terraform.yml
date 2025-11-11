@@ -13,16 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Configure AWS credentials from OIDC
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.TF_OIDC_ROLE_ARN }}
           aws-region: ap-south-1
 
-      - name: Terraform Init and Plan
-        run: |
-          cd envs/prod
-          terraform init -input=false
-          terraform plan -out plan.tfplan
+      # ✅ Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8  # you can change to your preferred version
+
+      - name: Terraform Init
+        run: terraform -chdir=envs/prod init -input=false
+
+      - name: Terraform Plan
+        run: terraform -chdir=envs/prod plan -out plan.tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform -chdir=envs/prod apply -auto-approve plan.tfplan
